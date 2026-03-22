@@ -73,7 +73,7 @@ fn pargs() -> Result<Pargs, pico_args::Error> {
     let mut pargs = pico_args::Arguments::from_env();
 
     if pargs.contains(["-h", "--help"]) {
-        print!("{}", HELP);
+        println!("{}", HELP);
         std::process::exit(0);
     }
 
@@ -89,7 +89,7 @@ fn pargs() -> Result<Pargs, pico_args::Error> {
         // diffrent: pargs.contains(["-d","--diffrent"]),
         // all: pargs.contains(["-a","--all"])
     };
-    println!("Using Paths: {} , {}",args.dir1.display(),args.dir2.display());
+    println!("Using Paths: {} , {}",&args.dir1.display(),&args.dir2.display());
 
     Ok(args)
 }
