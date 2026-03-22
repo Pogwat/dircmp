@@ -4,20 +4,26 @@ use std::path::{Path, PathBuf};
 
 fn main() -> Result<(), std::io::Error> {
     let args = pargs().expect("arg parse faield");
-    cmp_dirs(args.dir1,args.dir2)
+    let (same,diffrent,map,vec) = cmp_dirs(&args.dir1,&args.dir2)?;
+    
+    println!("entries in {} that arent in {}:", &args.dir2.to_string_lossy(), &args.dir1.to_string_lossy());
+    diffrent.iter().for_each(|entry| println!("{}",entry.path().display()));
+    println!("entries in {} that are in {}:" ,&args.dir1.to_string_lossy(), &args.dir2.to_string_lossy() );
+    same.iter().for_each(|entry| println!("{}",entry.path().display()));
+    Ok(())
 }
 
 fn get_relative_path<P:AsRef<Path>>(entry:&DirEntry, prefix:P) -> PathBuf {
     entry.path().strip_prefix(prefix).unwrap().to_path_buf() 
 }
 
-fn cmp_dirs<P:AsRef<Path>>(dir1:P,dir2:P) -> Result<(), std::io::Error>  {
-   /* 
-   Push to vec and hashmap
-   Search map for each new value
+fn cmp_dirs<P:AsRef<Path>>(dir1:&P,dir2:&P) -> Result<(Vec<DirEntry>,Vec<DirEntry>,HashMap<PathBuf,DirEntry>,Vec<DirEntry>), std::io::Error>  {
+/* 
+Push to vec and hashmap
+Search map for each new value
     if in map push to vector
     if not in map push to another vector
-   */ 
+*/ 
     let (dir1,dir2) = (dir1.as_ref(),dir2.as_ref());
     let mut map: HashMap<PathBuf,DirEntry> = HashMap::new();
     let mut vec: Vec<DirEntry> = Vec::new();
@@ -48,20 +54,16 @@ fn cmp_dirs<P:AsRef<Path>>(dir1:P,dir2:P) -> Result<(), std::io::Error>  {
         }
     });
 
-    println!("entries in {} that arent in {}:", dir2.to_string_lossy(), dir1.to_string_lossy());
-    diffrent.iter().for_each(|entry| println!("{}",entry.path().display()));
-    println!("entries in {} that are in {}:" ,dir1.to_string_lossy(), dir2.to_string_lossy() );
-    same.iter().for_each(|entry| println!("{}",entry.path().display()));
-Ok(())
+    Ok((same,diffrent,map,vec))
 }
 
-    struct Pargs {
-        dir1: PathBuf,
-        dir2: PathBuf,
-        // same: bool,
-        // diffrent: bool,
-        // all: bool
-    }
+struct Pargs {
+    dir1: PathBuf,
+    dir2: PathBuf,
+    // same: bool,
+    // diffrent: bool,
+    // all: bool
+}
 
 mod text;
 use text::HELP;
@@ -88,8 +90,6 @@ fn pargs() -> Result<Pargs, pico_args::Error> {
         // all: pargs.contains(["-a","--all"])
     };
     println!("Using Paths: {} , {}",args.dir1.display(),args.dir2.display());
-
-
 
     Ok(args)
 }
