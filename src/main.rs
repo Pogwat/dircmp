@@ -13,14 +13,21 @@ use std::path::Path;
 
 
 fn main() -> Result<(), std::io::Error> {
-    let dir1 = "/home/pog";
-    let dir2 = "/home/pog/Downloads/newhome";
+    cmp_dirs("/home/pog","/home/pog/Downloads/newhome")
+}
+
+fn get_relative_path<P:AsRef<Path>>(entry:&DirEntry, prefix:P) -> PathBuf {
+    entry.path().strip_prefix(prefix).unwrap().to_path_buf() 
+}
+
+fn cmp_dirs<P:AsRef<Path>>(dir1:P,dir2:P) -> Result<(), std::io::Error>  {
    /* 
    Push to vec and hashmap
    Search map for each new value
     if in map push to vector
     if not in map push to another vector
    */ 
+   let (dir1,dir2) = (dir1.as_ref(),dir2.as_ref());
     let mut map: HashMap<PathBuf,DirEntry> = HashMap::new();
     let mut vec: Vec<DirEntry> = Vec::new();
 
@@ -50,20 +57,9 @@ fn main() -> Result<(), std::io::Error> {
         }
     });
 
-    println!("entries in dir2 that arent in dir1:");
+    println!("entries in {} that arent in {}:", dir2.to_string_lossy(), dir1.to_string_lossy());
     diffrent.iter().for_each(|entry| println!("{}",entry.path().display()));
-    println!("entries in dir1 that are in dir2:");
+    println!("entries in {} that are in {}:" ,dir1.to_string_lossy(), dir2.to_string_lossy() );
     same.iter().for_each(|entry| println!("{}",entry.path().display()));
-
-
-
-
-
 Ok(())
-
-
-}
-
-fn get_relative_path<P:AsRef<Path>>(entry:&DirEntry, prefix:P) -> PathBuf {
-    entry.path().strip_prefix(prefix).unwrap().to_path_buf() 
 }
