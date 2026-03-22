@@ -32,3 +32,48 @@ FLAGS:
   -v, --version         Prints version
 ```
 
+![dircmp-example](images/dircmp.png)
+
+## Installation
+
+### Cargo+Git
+```bash
+git clone https://github.com/Pogwat/dircmp
+cd dircmp
+cargo build --release
+cd target/release
+./dircmp
+```
+
+### Binaries
+Download the binary [In releases](https://github.com/Pogwat/dircmp/releases)
+
+### Nix
+
+Use this as the file contents of your overlays.nix and then use the pacakges
+```nix
+{ rustPlatform, lib, fetchFromGitHub }:
+rustPlatform.buildRustPackage rec {
+  pname = "dircmp";
+  version = "0.1";
+  src =  fetchFromGitHub {
+    owner = "Pogwat";
+    repo = "dircmp";
+    rev = "v${version}";
+    hash = "sha256-tCDpDeADQCQrl4cOYibz3xHw8LolSfeFY7p0mxQddgs=";
+  };
+  cargoLock = {
+    lockFile = "${src}/Cargo.lock";
+  };
+
+  meta = {
+    description = "Compare file names of 2 directories, return diffrent files and same files ";
+    homepage = "https://github.com/Pogwat/dircmp";
+    license = lib.licenses.mit;
+    platforms = lib.platforms.linux;
+    maintainers = with lib.maintainers; [];
+    mainProgram = "dircmp";
+  };
+}
+```
+
