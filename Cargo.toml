@@ -7,3 +7,10 @@ edition = "2024"
 hashbrown = "=0.7.2"
 pico-args = "0.5.0"
 walkdir = "2.5.0"
+
+[profile.release]
+opt-level = "z"   # Optimize for size
+lto = true #remove unessecary code
+strip = true # strip debug symbols
+codegen-units = 1 #split crate into multipe compile units
+panic = "abort" # remove panic code
