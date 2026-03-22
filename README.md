@@ -17,3 +17,17 @@ the cmp_dir 's function that actually does the comparing is only about 30 lines 
 This is really inefficent for small comparisions but for large comparissions its probably faster than reapeted std::path::Path::exists()
 
 Right now my implememntation is pretty flawed it recursivley maps every file in both directories using walkdir regargdless of if the parent directory it is traverssing even exists in source dir
+
+## Use 
+
+```
+dircmp
+
+USAGE:
+  dircmp [DIR1] [DIR2] [FLAGS] 
+
+FLAGS:
+  -h, --help            Prints help information
+  -v, --version         Prints version
+```
+
