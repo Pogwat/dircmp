@@ -1,16 +1,6 @@
-// use std::fs::rename;
-// use std::os::unix::fs::symlink;
-
-// use std::fs::read_dir;
-//use std::fs::ReadDir;
-
 use hashbrown::HashMap;
-use std::hash::Hash;
-use walkdir::WalkDir;
-use std::path::PathBuf;
-use walkdir::DirEntry;
-use std::path::Path;
-
+use walkdir::{WalkDir, DirEntry};
+use std::path::{Path, PathBuf};
 
 fn main() -> Result<(), std::io::Error> {
     cmp_dirs("/home/pog","/home/pog/Downloads/newhome")
